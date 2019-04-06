@@ -1,68 +1,57 @@
 <template>
-  <section class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        nuxt-wunderlist
-      </h1>
-      <h2 class="subtitle">
-        My dazzling Nuxt.js project
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
-        >Documentation</a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >GitHub</a>
-      </div>
-    </div>
-  </section>
+  <b-container fluid>
+    <b-row class="main-container">
+      <b-col class="sider-container">
+        <Sider />
+      </b-col>
+      <b-col class="right-container">
+        <b-row>
+          <b-col cols="12" class="header-container">
+            <Header title="标题" />
+          </b-col>
+          <b-col cols="12" class="content-container">
+            <Content />
+          </b-col>
+        </b-row>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-
+import Header from '../components/Header'
+import Sider from '../components/Sider'
+import Content from '../components/Content'
+import axios from '../server/utils/axios'
 export default {
   components: {
-    Logo
+    Header,
+    Sider,
+    Content
+  },
+  fetch({ store, params }) {
+    return axios.get('/api/tasks/test')
+      .then((result) => {
+        store.commit('initUserTasks', result.data.tasks)
+      })
   }
 }
 </script>
 
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
+<style lang="scss" scoped>
+  .main-container{
+  }
+  .sider-container{
+    flex: 0 0 280px;
+    height: 100vh;
+    background: $WHITE_SIDER;
+  }
+  .right-container{
+    height: 100vh;
+    background-image: url('../assets/img/bg.jpg');
+    background-size: cover;
+    .header-container{
+      height: 46px;
+    }
+  }
 </style>
