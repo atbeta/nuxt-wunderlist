@@ -2,6 +2,10 @@ import Koa from 'koa'
 import consola from 'consola'
 import { Nuxt, Builder } from 'nuxt'
 import bodyParser from 'koa-bodyparser'
+import session from 'koa-generic-session'
+import passport from './utils/passport'
+import redisStore from 'koa-redis'
+import redis from 'redis'
 // 这里开始引用 API
 import mongoose from 'mongoose'
 import tasks from './api/tasks'
@@ -11,7 +15,27 @@ import dbConfig from './db/config'
 // 引用结束
 
 const app = new Koa()
+
+const client = redis.createClient(6379,"db.pup.pub")
+client.on('error', function (error) {
+  console.log(error)
+})
+const options = { client: client, db: 1 }
+const store = redisStore(options)
+
+app.keys = ['test']
+app.proxy = true
+
+app.use(session({
+  key: 'test',
+  prefix: 'test:uid',
+  store: store
+}))
+
 app.use(bodyParser({ extendTypes: ['json', 'form', 'text'] }))
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use(tasks.routes()).use(tasks.allowedMethods())
 app.use(lists.routes()).use(lists.allowedMethods())

@@ -112,6 +112,11 @@ export const mutations = {
   initUserTasks(state, tasks) {
     state.tasks = tasks
   },
+  updateUserLogin(state, user) {
+    state.userStatus.isLogin = true
+    state.userStatus.username = user.username
+    state.userStatus.id = user.id
+  },
   changeListIndex(state, index) {
     state.clickStatus.listIndex = index
   },
