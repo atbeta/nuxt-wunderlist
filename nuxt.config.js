@@ -57,13 +57,24 @@ module.exports = {
   */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
+    proxy: true
+  },
+  proxy: {
+    '/api': '/api'
   },
   auth: {
     redirect: {
-      login: '/login',
-      logout: '/',
-      callback: '/login',
-      home: '/'
+      logout: '/login',
+      callback: '/callback'
+    },
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/api/login', method: 'post' },
+          logout: { url: '/api/logout', method: 'get' },
+          user: { url: '/api/getUser', method: 'get', propertyName: 'username' }
+        }
+      }
     }
   },
   /*

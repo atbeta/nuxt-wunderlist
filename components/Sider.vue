@@ -45,6 +45,7 @@ export default {
   },
   computed: {
     ...mapState({
+      auth: 'auth',
       clickStatus: 'clickStatus',
       userStatus: 'userStatus',
       taskStatus: 'taskStatus',
@@ -54,6 +55,13 @@ export default {
     }),
     lists() {
       return this.commonLists.concat(this.customLists)
+    }
+  },
+  mounted() {
+    if (this.auth.loggedIn) {
+      this.$axios.get('/api/lists/' + this.auth.user).then((res) => {
+        this.$store.commit('initUserLists', res.data.lists)
+      })
     }
   },
   methods: {

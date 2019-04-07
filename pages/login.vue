@@ -52,7 +52,7 @@
             />
           </div>
           <div class="button-wrapper">
-            <b-button class="button-login" @click="handleSubmit">
+            <b-button class="button-login" @click="handleLogin">
               登录
             </b-button>
           </div>
@@ -70,6 +70,7 @@
 
 <script>
 export default {
+  middleware: 'auth',
   name: 'Login',
   data() {
     return {
@@ -115,6 +116,21 @@ export default {
             this.apiValidate = false
           }
         })
+      }
+    },
+    async handleLogin() {
+      this.validateResult.username = true
+      this.validateResult.password = true
+      const result = this.validate(this.FormData.username, this.FormData.password)
+      if (result) {
+        await this.$auth
+          .loginWith('local', {
+            data: {
+              username: this.FormData.username,
+              password: this.FormData.password
+            }
+          })
+        this.apiValidate = this.$store.state.auth.loggedIn
       }
     }
   }

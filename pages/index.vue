@@ -15,6 +15,11 @@
         </b-row>
       </b-col>
     </b-row>
+    <div>
+      <b-button @click="handleLogout">
+        测试注销
+      </b-button>
+    </div>
   </b-container>
 </template>
 
@@ -33,14 +38,10 @@ export default {
     return {
     }
   },
-  mounted() {
-    this.$axios.get('/api/getUser').then((res) => {
-      if (res.data.code === 0) {
-        this.$store.commit('updateUserLogin', { username: res.data.username, id: res.data.id })
-      } else {
-        this.$router.push('/login')
-      }
-    })
+  methods: {
+    async handleLogout() {
+      await this.$auth.logout()
+    }
   }
 }
 </script>

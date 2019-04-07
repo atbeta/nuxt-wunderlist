@@ -71,6 +71,7 @@ export default {
   },
   computed: {
     ...mapState({
+      auth: 'auth',
       clickStatus: 'clickStatus',
       userStatus: 'userStatus',
       taskStatus: 'taskStatus',
@@ -107,9 +108,8 @@ export default {
     }
   },
   mounted() {
-    console.log('hello')
-    if (this.userStatus.isLogin) {
-      this.$axios.get('/api/tasks/' + this.userStatus.username).then((res) => {
+    if (this.auth.loggedIn) {
+      this.$axios.get('/api/tasks/' + this.auth.user).then((res) => {
         this.$store.commit('initUserTasks', res.data.tasks)
       })
     }
