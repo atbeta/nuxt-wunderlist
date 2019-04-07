@@ -5,9 +5,9 @@ export const state = () => ({
     taskIndex: 0
   },
   userStatus: {
-    isLogin: true,
-    username: 'test',
-    id: '5ca7a0188daf990a72129f63'
+    isLogin: false,
+    username: '',
+    id: ''
   },
   taskStatus: {
     title: '',
@@ -17,79 +17,80 @@ export const state = () => ({
     list: '',
     expireAt: null
   },
-  tasks: [{
-    'done': false,
-    'star': false,
-    'expireAt': null,
-    'status': 0,
-    '_id': '5ca7a103d428840c991be68f',
-    'id': 0,
-    'creator': '5ca7a0188daf990a72129f63',
-    'title': '测试任务一',
-    'createAt': '2019-04-05T18:40:03.607Z',
-    '__v': 0
-  },
-  {
-    'done': false,
-    'star': true,
-    'expireAt': null,
-    'status': 0,
-    '_id': '5ca7a147588fb00d73650f15',
-    'id': 1,
-    'creator': '5ca7a0188daf990a72129f63',
-    'title': '测试任务带星标一',
-    'createAt': '2019-04-05T18:41:11.507Z',
-    '__v': 0
-  },
-  {
-    'done': true,
-    'star': false,
-    'expireAt': null,
-    'status': 0,
-    '_id': '5ca7a16603fb180dddb192d5',
-    'id': 2,
-    'creator': '5ca7a0188daf990a72129f63',
-    'title': '测试任务已完成一',
-    'createAt': '2019-04-05T18:41:42.148Z',
-    '__v': 0
-  },
-  {
-    'done': true,
-    'star': false,
-    'expireAt': null,
-    'status': 0,
-    '_id': '5ca7a38ede7f5710c072b7dc',
-    'id': 3,
-    'creator': '5ca7a0188daf990a72129f63',
-    'list': '5ca7a0c8f302190c14e89e49',
-    'title': '测试任务自定义清单',
-    'createAt': '2019-04-05T18:50:54.796Z',
-    '__v': 0
-  },
-  {
-    'done': true,
-    'star': false,
-    'expireAt': '2019-04-03T18:53:17.556Z',
-    'status': 0,
-    '_id': '5ca7a41dd33d4011914162d0',
-    'id': 4,
-    'creator': '5ca7a0188daf990a72129f63',
-    'title': '测试已过期任务',
-    'createAt': '2019-04-05T18:53:17.555Z',
-    '__v': 0
-  },
-  {
-    'done': false,
-    'star': false,
-    'expireAt': '2019-03-31T18:53:53.158Z',
-    'status': 0,
-    '_id': '5ca7a441699f821200027dcd',
-    'id': 5,
-    'creator': '5ca7a0188daf990a72129f63',
-    'title': '测试已过期任务二',
-    'createAt': '2019-04-05T18:53:53.157Z',
-    '__v': 0
-  }],
+  tasks: [],
+  // tasks: [{
+  //   'done': false,
+  //   'star': false,
+  //   'expireAt': null,
+  //   'status': 0,
+  //   '_id': '5ca7a103d428840c991be68f',
+  //   'id': 0,
+  //   'creator': '5ca7a0188daf990a72129f63',
+  //   'title': '测试任务一',
+  //   'createAt': '2019-04-05T18:40:03.607Z',
+  //   '__v': 0
+  // },
+  // {
+  //   'done': false,
+  //   'star': true,
+  //   'expireAt': null,
+  //   'status': 0,
+  //   '_id': '5ca7a147588fb00d73650f15',
+  //   'id': 1,
+  //   'creator': '5ca7a0188daf990a72129f63',
+  //   'title': '测试任务带星标一',
+  //   'createAt': '2019-04-05T18:41:11.507Z',
+  //   '__v': 0
+  // },
+  // {
+  //   'done': true,
+  //   'star': false,
+  //   'expireAt': null,
+  //   'status': 0,
+  //   '_id': '5ca7a16603fb180dddb192d5',
+  //   'id': 2,
+  //   'creator': '5ca7a0188daf990a72129f63',
+  //   'title': '测试任务已完成一',
+  //   'createAt': '2019-04-05T18:41:42.148Z',
+  //   '__v': 0
+  // },
+  // {
+  //   'done': true,
+  //   'star': false,
+  //   'expireAt': null,
+  //   'status': 0,
+  //   '_id': '5ca7a38ede7f5710c072b7dc',
+  //   'id': 3,
+  //   'creator': '5ca7a0188daf990a72129f63',
+  //   'list': '5ca7a0c8f302190c14e89e49',
+  //   'title': '测试任务自定义清单',
+  //   'createAt': '2019-04-05T18:50:54.796Z',
+  //   '__v': 0
+  // },
+  // {
+  //   'done': true,
+  //   'star': false,
+  //   'expireAt': '2019-04-03T18:53:17.556Z',
+  //   'status': 0,
+  //   '_id': '5ca7a41dd33d4011914162d0',
+  //   'id': 4,
+  //   'creator': '5ca7a0188daf990a72129f63',
+  //   'title': '测试已过期任务',
+  //   'createAt': '2019-04-05T18:53:17.555Z',
+  //   '__v': 0
+  // },
+  // {
+  //   'done': false,
+  //   'star': false,
+  //   'expireAt': '2019-03-31T18:53:53.158Z',
+  //   'status': 0,
+  //   '_id': '5ca7a441699f821200027dcd',
+  //   'id': 5,
+  //   'creator': '5ca7a0188daf990a72129f63',
+  //   'title': '测试已过期任务二',
+  //   'createAt': '2019-04-05T18:53:53.157Z',
+  //   '__v': 0
+  // }],
   commonLists: [
     { id: -5, name: '收件箱' },
     { id: -4, name: '已加星标' },
@@ -112,10 +113,17 @@ export const mutations = {
   initUserTasks(state, tasks) {
     state.tasks = tasks
   },
+  initUserLists(state, lists) {
+    state.customLists = lists
+  },
   updateUserLogin(state, user) {
-    state.userStatus.isLogin = true
-    state.userStatus.username = user.username
-    state.userStatus.id = user.id
+    if (user) {
+      state.userStatus = {
+        isLogin: true,
+        username: user.username,
+        id: user.id
+      }
+    }
   },
   changeListIndex(state, index) {
     state.clickStatus.listIndex = index

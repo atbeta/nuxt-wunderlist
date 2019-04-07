@@ -5,11 +5,11 @@
         <span
           class="iconfont iconfont-plus"
           @click="handleAddTask"
-        >&#xe687;
+        >&#xe696;
         </span>
         <input type="text" placeholder="添加任务" :value="taskStatus.title" @input="handleChangeTitleStatus" @keyup.enter="handleAddTask">
-        <span class="iconfont">&#xe687;</span>
-        <span class="iconfont">&#xe687;</span>
+        <span class="iconfont">&#xe71f;</span>
+        <span class="iconfont">&#xe64b;</span>
       </div>
     </b-col>
     <b-col cols="12" class="content-list-container">
@@ -25,14 +25,14 @@
             class="iconfont"
             :index="task.id"
             @click="handleChangeTaskDone(task.id)"
-          >&#xe614;
+          >&#xe601;
           </span>
           <span
             v-if="task.done"
             class="iconfont"
             :index="task.id"
             @click="handleChangeTaskDone(task.id)"
-          >&#xe612;
+          >&#xe614;
           </span>
           <span :class="task.done ? 'delete' : ''" :index="task.id">
             {{ task.title }}
@@ -43,14 +43,14 @@
             :index="task.id"
             class="iconfont"
             @click="handleChangeTaskStar(task.id)"
-          >&#xe687;
+          >&#xe6e0;
           </span>
           <span
             v-if="task.star"
             :index="task.id"
             class="iconfont"
             @click="handleChangeTaskStar(task.id)"
-          >&#xe73c;
+          >&#xe637;
           </span>
         </li>
       </ul>
@@ -63,6 +63,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import axios from '../server/utils/axios'
 export default {
   name: 'Content',
   data() {
@@ -104,6 +105,14 @@ export default {
           return this.getStarTasks
         }
       }
+    }
+  },
+  mounted() {
+    console.log('hello')
+    if (this.userStatus.isLogin) {
+      axios.get('/api/tasks/' + this.userStatus.username).then((res) => {
+        this.$store.commit('initUserTasks', res.data.tasks)
+      })
     }
   },
   methods: {

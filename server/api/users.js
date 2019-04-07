@@ -68,13 +68,16 @@ router.get('/logout', async (ctx, next) => {
 
 router.get('/getUser', (ctx) => {
   if (ctx.isAuthenticated()) {
-    const { username } = ctx.session.passport.user
+    const { username, _id } = ctx.session.passport.user
     ctx.body = {
-      user: username
+      code: 0,
+      username: username,
+      id: _id
     }
   } else {
     ctx.body = {
-      why: 'false'
+      code: 1,
+      msg: '用户未登录'
     }
   }
 })

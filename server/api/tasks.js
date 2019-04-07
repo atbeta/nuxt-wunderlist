@@ -8,12 +8,19 @@ const router = new Router({
 router.get('/tasks/:user', async ctx => {
   const username = ctx.params.user
   const user = await User.findOne({ username: username })
-  const taskList = user.tasks
-  const tasks = await Task.find({ _id: { $in: taskList } })
-  ctx.body = {
-    code: 0,
-    msg: '查询成功',
-    tasks: tasks.filter(item => item.status === 0)
+  if (user) {
+    const taskList = user.tasks
+    const tasks = await Task.find({ _id: { $in: taskList } })
+    ctx.body = {
+      code: 0,
+      msg: '查询成功',
+      tasks: tasks.filter(item => item.status === 0)
+    }
+  } else {
+    ctx.body = {
+      code: 1,
+      msg: '用户不存在'
+    }
   }
 })
 

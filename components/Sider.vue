@@ -1,15 +1,15 @@
 <template>
   <b-row class="sider-wrapper">
     <b-col cols="12" class="sider-header">
-      <span class="iconfont iconfont-menu" @click="toggleCollapse">&#xe682;</span>
+      <span class="iconfont iconfont-menu" @click="toggleCollapse">&#xe63e;</span>
       <span class="sider-header-search">搜索</span>
-      <span class="iconfont iconfont-search">&#xe642;</span>
+      <span class="iconfont iconfont-search">&#xe604;</span>
     </b-col>
     <b-col cols="12" class="quick-menu">
-      <span class="iconfont">&#xe687;</span>
-      <span class="username">Test</span>
-      <span v-if="!collapsed" class="iconfont">&#xe687;</span>
-      <span v-if="!collapsed" class="iconfont">&#xe687;</span>
+      <span class="iconfont iconfont-avatar">&#xe605;</span>
+      <span class="username">{{ userStatus.username }}</span>
+      <span v-if="!collapsed" class="iconfont iconfont-bell">&#xe827;</span>
+      <span v-if="!collapsed" class="iconfont iconfont-popover">&#xe885;</span>
     </b-col>
     <b-col cols="12" class="sider-list">
       <ul>
@@ -19,7 +19,12 @@
           :class="list.id===clickStatus.listIndex?'selected':''"
           @click="handleListClick(list.id)"
         >
-          <span class="iconfont">&#xe687;</span>
+          <span v-if="list.id===-5" class="iconfont" style="color: #228bef">&#xe6e5;</span>
+          <span v-if="list.id===-4" class="iconfont" style="color: #e2695b">&#xe64b;</span>
+          <span v-if="list.id===-3" class="iconfont" style="color: #5da200">&#xe672;</span>
+          <span v-if="list.id===-2" class="iconfont" style="color: #e49700">&#xe606;</span>
+          <span v-if="list.id===-1" class="iconfont" style="color: #9d5e14">&#xe67b;</span>
+          <span v-if="list.id>=0" class="iconfont">&#xe611;</span>
           <span>{{ list.name }}</span>
           <span class="expire-count">2</span>
           <span class="total-count">6</span>
@@ -59,6 +64,9 @@ export default {
     toggleCollapse() {
       console.log(this.collapsed)
       this.collapsed = !this.collapsed
+    },
+    showSiderIcon(id) {
+      console.log(id)
     }
   }
 }
@@ -92,11 +100,26 @@ export default {
     line-height: 45px;
     display: flex;
     flex-flow: row nowrap;
+    padding-left: 5px;
+    padding-right: 5px;
     span{
       flex: 0 0 25px;
       &:nth-child(2){
         flex: 1;
       }
+    }
+    span.iconfont-avatar{
+      color: #777;
+      font-size: 28px;
+      margin-right: 10px;
+    }
+    span.iconfont-bell{
+      font-size: 20px;
+      margin: 0 12px;
+    }
+    span.iconfont-popover{
+      font-size: 20px;
+      font-weight: 300;
     }
   }
   .sider-list{
@@ -107,7 +130,7 @@ export default {
       padding-left: 0;
     }
     li {
-      height: 36px;
+      height: 40px;
       line-height: 36px;
       display: flex;
       flex-flow: row nowrap;

@@ -9,14 +9,14 @@
     </b-row>
     <b-row v-if="!apiValidate" class="login-inform-container">
       <b-col cols="4" class="login-fail-inform">
-        <span>你输入的电子邮件或密码不正确，请重试。</span>
+        <span>你输入的用户名或密码不正确，请重试。</span>
       </b-col>
     </b-row>
     <b-row class="form-container">
       <b-col cols="4" class="login-form">
         <form>
           <div class="input-wrapper">
-            <span class="iconfont">&#xe682;</span>
+            <span class="iconfont">&#xe623;</span>
             <input
               id="username-popover"
               v-model="FormData.username"
@@ -34,7 +34,7 @@
             />
           </div>
           <div class="input-wrapper">
-            <span class="iconfont">&#xe682;</span>
+            <span class="iconfont">&#xe602;</span>
             <input
               id="password-popover"
               v-model="FormData.password"
@@ -153,7 +153,9 @@ export default {
         span.iconfont{
           width: 24px;
           margin-left: 15px;
-          margin-right: 5px;
+          margin-right: 15px;
+          color: #4899e2;
+          font-size: 20px;
         }
         input{
           width: 100%;

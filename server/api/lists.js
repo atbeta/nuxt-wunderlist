@@ -16,7 +16,9 @@ router.get('/lists/:user', async ctx => {
     ctx.body = {
       code: 0,
       msg: '查询成功',
-      tasks: lists.filter(item => item.status === 0)
+      lists: lists.filter(item => item.status === 0).map((list) => {
+        return { id: list.id, name: list.name, _id: list._id }
+      })
     }
   } else {
     ctx.body = {

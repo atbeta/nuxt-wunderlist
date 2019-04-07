@@ -29,11 +29,18 @@ export default {
     Sider,
     Content
   },
-  fetch({ store, params }) {
-    return axios.get('/api/tasks/test')
-      .then((result) => {
-        store.commit('initUserTasks', result.data.tasks)
-      })
+  data() {
+    return {
+    }
+  },
+  mounted() {
+    axios.get('/api/getUser').then((res) => {
+      if (res.data.code === 0) {
+        this.$store.commit('updateUserLogin', { username: res.data.username, id: res.data.id })
+      } else {
+        this.$router.push('/login')
+      }
+    })
   }
 }
 </script>

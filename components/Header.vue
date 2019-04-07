@@ -9,11 +9,11 @@
         <span class="icon-title">共享</span>
       </div>
       <div>
-        <span class="iconfont iconfont-sort">&#xe80b;</span>
+        <span class="iconfont iconfont-sort">&#xe616;</span>
         <span class="icon-title">排序</span>
       </div>
       <div class="last">
-        <span class="iconfont iconfont-more">&#xe62f;</span>
+        <span class="iconfont iconfont-more">&#xe6d3;</span>
         <span class="icon-title">更多</span>
       </div>
     </b-col>
