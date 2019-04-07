@@ -1,6 +1,5 @@
 import Router from 'koa-router'
 import { Task, User, List } from '../db/models'
-import passport from '../utils/passport'
 
 const router = new Router({
   prefix: '/api'

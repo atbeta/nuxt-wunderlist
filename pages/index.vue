@@ -22,8 +22,8 @@
 import Header from '../components/Header'
 import Sider from '../components/Sider'
 import Content from '../components/Content'
-import axios from '../server/utils/axios'
 export default {
+  middleware: 'auth',
   components: {
     Header,
     Sider,
@@ -34,7 +34,7 @@ export default {
     }
   },
   mounted() {
-    axios.get('/api/getUser').then((res) => {
+    this.$axios.get('/api/getUser').then((res) => {
       if (res.data.code === 0) {
         this.$store.commit('updateUserLogin', { username: res.data.username, id: res.data.id })
       } else {

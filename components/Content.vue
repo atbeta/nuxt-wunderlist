@@ -63,7 +63,6 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import axios from '../server/utils/axios'
 export default {
   name: 'Content',
   data() {
@@ -110,7 +109,7 @@ export default {
   mounted() {
     console.log('hello')
     if (this.userStatus.isLogin) {
-      axios.get('/api/tasks/' + this.userStatus.username).then((res) => {
+      this.$axios.get('/api/tasks/' + this.userStatus.username).then((res) => {
         this.$store.commit('initUserTasks', res.data.tasks)
       })
     }

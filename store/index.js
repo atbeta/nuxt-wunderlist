@@ -1,4 +1,3 @@
-import axios from '../server/utils/axios'
 export const state = () => ({
   clickStatus: {
     listIndex: -5,
@@ -169,13 +168,13 @@ export const getters = {
 
 export const actions = {
   async initUserTasks(ctx, user) {
-    const result = await axios.get(`/tasks/${user}`)
+    const result = await ctx.$axios.get(`/tasks/${user}`)
     console.log(result.data.tasks)
     ctx.commit('initUserTasks', result.data.tasks)
   },
   async addTask(ctx) {
     ctx.commit('changeTaskCreatorStatus')
-    const newTask = await axios.post('/api/tasks', ctx.state.taskStatus)
+    const newTask = await ctx.$axios.post('/api/tasks', ctx.state.taskStatus)
     console.log(newTask)
     ctx.commit('addTask', { ...ctx.state.taskStatus, id: newTask.data.id, _id: newTask.data.task })
   }
