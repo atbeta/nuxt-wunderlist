@@ -47,7 +47,8 @@ export default {
 
     .right-menu {
       flex: 0 0 160px;
-      padding-right: 12px;
+      padding-right: 6px;
+      padding-left: 6px;
       div {
         float: left;
         padding: 0 12px;

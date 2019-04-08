@@ -3,7 +3,7 @@ export const state = () => ({
     listIndex: -5,
     taskIndex: 0
   },
-  userStatus: {
+  userInfo: {
     isLogin: false,
     username: '',
     id: ''
@@ -115,13 +115,10 @@ export const mutations = {
   initUserLists(state, lists) {
     state.customLists = lists
   },
-  updateUserLogin(state, user) {
-    if (user) {
-      state.userStatus = {
-        isLogin: true,
-        username: user.username,
-        id: user.id
-      }
+  updateUserInfo(state, user) {
+    state.userInfo = {
+      username: user.username,
+      id: user.id
     }
   },
   changeListIndex(state, index) {
@@ -141,7 +138,7 @@ export const mutations = {
   },
   // Todo 这里暂先用一个mutations代替，之后需要在请求数据时初始化
   changeTaskCreatorStatus(state) {
-    state.taskStatus.creator = state.userStatus.id
+    state.taskStatus.creator = state.userInfo.id
   },
   addTask(state, newTask) {
     // 只把任务添加到 store，通过action来发送post请求并将返回值更新到store

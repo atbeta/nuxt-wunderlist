@@ -7,9 +7,27 @@
           @click="handleAddTask"
         >&#xe696;
         </span>
-        <input type="text" placeholder="添加任务" :value="taskStatus.title" @input="handleChangeTitleStatus" @keyup.enter="handleAddTask">
-        <span class="iconfont">&#xe71f;</span>
-        <span class="iconfont">&#xe64b;</span>
+        <input
+          :value="taskStatus.title"
+          placeholder="添加任务"
+          type="text"
+          @input="handleChangeTitleStatus"
+          @keyup.enter="handleAddTask"
+        >
+        <span
+          v-if="inputFocus"
+          class="iconfont iconfont-expire"
+          @click="handleChangeExpireStatus"
+        >
+          {{ !taskStatus.expireAt?'&#xe71f;':'&#xe78d;' }}
+        </span>
+        <span
+          v-if="inputFocus"
+          class="iconfont iconfont-star"
+          @click="handleChangeStarStatus"
+        >
+          {{ !taskStatus.star?'&#xe6e0;':'&#xe637;' }}
+        </span>
       </div>
     </b-col>
     <b-col cols="12" class="content-list-container">
@@ -37,7 +55,7 @@
           <span :class="task.done ? 'delete' : ''" :index="task.id">
             {{ task.title }}
           </span>
-          <span>{{ task.expireAt }}</span>
+          <span>{{ task.expireAt?task.expireAt.substr(0,10):'' }}</span>
           <span
             v-if="!task.star"
             :index="task.id"
@@ -67,13 +85,14 @@ export default {
   name: 'Content',
   data() {
     return {
+      inputFocus: true
     }
   },
   computed: {
     ...mapState({
       auth: 'auth',
       clickStatus: 'clickStatus',
-      userStatus: 'userStatus',
+      userInfo: 'userInfo',
       taskStatus: 'taskStatus',
       tasks: 'tasks',
       commonLists: 'commonLists',
@@ -119,6 +138,11 @@ export default {
       console.log(e.target.value)
       this.$store.commit('changeTaskTitleStatus', e.target.value)
     },
+    handleChangeExpireStatus() {
+    },
+    handleChangeStarStatus() {
+      this.$store.commit('changeTaskStarStatus')
+    },
     handleAddTask() {
       this.$store.dispatch('addTask')
     },
@@ -150,10 +174,11 @@ export default {
     border-radius: 3px;
 
     input {
-      width: 100%;
+      flex: 1;
       color: $WHITE_TEXT;
       background: $GREEN_INPUT;
       border: 0;
+      outline: none;
       &::placeholder {
         color: #d2dfe3;
       }
@@ -165,6 +190,14 @@ export default {
       flex: 0 0 20px;
       padding-left: 8px;
       padding-right: 8px;
+      color: $WHITE;
+      &.iconfont-plus{
+      }
+      &.iconfont-expire{
+      }
+      &.iconfont-star{
+        font-weight: 700;
+      }
     }
   }
   .content-list-container{

@@ -38,6 +38,15 @@ export default {
     return {
     }
   },
+  mounted() {
+    if (this.$store.state.auth.loggedIn) {
+      this.$axios.get('/api/getUser')
+        .then(({ data }) => {
+          const { username, id } = data
+          this.$store.commit('updateUserInfo', { username, id })
+        })
+    }
+  },
   methods: {
     async handleLogout() {
       await this.$auth.logout()

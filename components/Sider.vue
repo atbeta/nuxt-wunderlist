@@ -7,7 +7,7 @@
     </b-col>
     <b-col cols="12" class="quick-menu">
       <span class="iconfont iconfont-avatar">&#xe605;</span>
-      <span class="username">{{ userStatus.username }}</span>
+      <span class="username">{{ userInfo.username }}</span>
       <span v-if="!collapsed" class="iconfont iconfont-bell">&#xe827;</span>
       <span v-if="!collapsed" class="iconfont iconfont-popover">&#xe885;</span>
     </b-col>
@@ -47,7 +47,7 @@ export default {
     ...mapState({
       auth: 'auth',
       clickStatus: 'clickStatus',
-      userStatus: 'userStatus',
+      userInfo: 'userInfo',
       taskStatus: 'taskStatus',
       tasks: 'tasks',
       commonLists: 'commonLists',

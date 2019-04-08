@@ -176,6 +176,7 @@ export default {
         input{
           width: 100%;
           border: 0;
+          outline: none; // 针对Chrome浏览器外框变蓝
           &::placeholder{
             font-size: 16px;
             color: $BLACK_TEXT;
