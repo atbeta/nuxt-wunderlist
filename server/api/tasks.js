@@ -5,6 +5,8 @@ const router = new Router({
   prefix: '/api'
 })
 
+// TODO：待补充未加用户验证的api，待补充参数验证避免崩溃
+
 router.get('/tasks/:user', async ctx => {
   const username = ctx.params.user
   const user = await User.findOne({ username: username })
@@ -61,6 +63,24 @@ router.post('/tasks', async (ctx, next) => {
       msg: '创建任务成功',
       task: task._id,
       id: task.id
+    }
+  }
+})
+
+// 修改任务，可接收多个参数，可以包括 _id title star done expireAt五个属性，其中_id必须
+router.put('/tasks', async (ctx, next) => {
+  const _id = ctx.request.body._id
+  const task = await Task.findOneAndUpdate({ _id: _id }, ctx.request.body.task)
+  if (task) {
+    ctx.body = {
+      code: 0,
+      msg: '更新任务成功',
+      _id: _id
+    }
+  } else {
+    ctx.body = {
+      code: 1,
+      msg: '更新任务失败'
     }
   }
 })

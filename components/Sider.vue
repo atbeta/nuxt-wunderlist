@@ -26,8 +26,8 @@
           <span v-if="list.id===-1" class="iconfont" style="color: #9d5e14">&#xe67b;</span>
           <span v-if="list.id>=0" class="iconfont">&#xe611;</span>
           <span v-if="!collapsed">{{ list.name }}</span>
-          <span v-if="!collapsed" class="expire-count">2</span>
-          <span v-if="!collapsed" class="total-count">6</span>
+          <span v-if="!collapsed" class="expire-count">{{ showExpireCount(list.id) }}</span>
+          <span v-if="!collapsed" class="total-count">{{ showTotalCount(list.id) }}</span>
         </li>
       </ul>
     </b-col>
@@ -58,7 +58,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import moment from 'moment'
+import { mapState, mapGetters } from 'vuex'
 export default {
   name: 'Sider',
   data() {
@@ -78,21 +79,30 @@ export default {
       commonLists: 'commonLists',
       customLists: 'customLists'
     }),
+    ...mapGetters({
+      getInboxTasks: 'getInboxTasks', // 这个包括了已完成和未完成的
+      getUndoneTodos: 'getUndoneTodos',
+      getStarTasks: 'getStarTasks',
+      getAllTasks: 'getAllTasks',
+      getCustomListTasks: 'getCustomListTasks',
+      getTodayTasks: 'getTodayTasks',
+      getThisWeekTasks: 'getThisWeekTasks'
+    }),
     lists() {
       return this.commonLists.concat(this.customLists)
     }
   },
-  mounted() {
-    if (this.auth.loggedIn) {
-      this.$axios.get('/api/lists/' + this.auth.user).then((res) => {
-        this.$store.commit('initUserLists', res.data.lists)
-      })
-    }
-  },
   methods: {
     handleListClick(key) {
+      this.$store.commit('clearTaskStatus')
       this.$store.commit('changeListIndex', key)
       this.$store.commit('changeTaskListStatus', key)
+      if (key === -4) {
+        this.$store.commit('changeTaskStarStatus')
+      }
+      if (key === -3) {
+        this.$store.commit('changeTaskExpireStatus', moment().format())
+      }
     },
     toggleCollapse() {
       this.collapsed = !this.collapsed
@@ -119,6 +129,52 @@ export default {
     handleSubmit() {
       this.$store.dispatch('addList', this.listName)
       this.$refs.modal.hide()
+    },
+    showTotalCount(index) {
+      switch (index) {
+        case -5: {
+          return this.getInboxTasks.length
+        }
+        case -4: {
+          return this.getStarTasks.length
+        }
+        case -3: {
+          return this.getTodayTasks.length
+        }
+        case -2: {
+          return this.getThisWeekTasks.length
+        }
+        case -1: {
+          return this.getAllTasks.length
+        }
+        default: { // TODO 这里不知道怎么过程中那么多Bug
+          const _id = this.customLists.filter(list => list.id === index)[0]._id
+          return this.tasks.filter(task => task.list === _id).length
+        }
+      }
+    },
+    showExpireCount(index) {
+      switch (index) {
+        case -5: {
+          return this.getInboxTasks.filter(task => task.expireAt && moment(task.expireAt) < moment()).length
+        }
+        case -4: {
+          return this.getStarTasks.filter(task => task.expireAt && moment(task.expireAt) < moment()).length
+        }
+        case -3: {
+          return this.getTodayTasks.filter(task => task.expireAt && moment(task.expireAt) < moment()).length
+        }
+        case -2: {
+          return this.getThisWeekTasks.filter(task => task.expireAt && moment(task.expireAt) < moment()).length
+        }
+        case -1: {
+          return this.getAllTasks.filter(task => task.expireAt && moment(task.expireAt) < moment()).length
+        }
+        default: { // TODO 这里不知道怎么过程中那么多Bug
+          const _id = this.customLists.filter(list => list.id === index)[0]._id
+          return this.tasks.filter(task => task.list === _id).filter(task => task.expireAt && moment(task.expireAt) < moment()).length
+        }
+      }
     }
   }
 }

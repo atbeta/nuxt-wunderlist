@@ -1,3 +1,4 @@
+import moment from 'moment'
 export const state = () => ({
   clickStatus: {
     listIndex: -5,
@@ -66,6 +67,11 @@ export const mutations = {
   changeTaskCreatorStatus(state) {
     state.taskStatus.creator = state.userInfo.id
   },
+  clearTaskStatus(state) { // 添加完一个任务后清除加星和完成到期日状态
+    state.taskStatus.title = ''
+    state.taskStatus.expireAt = null
+    state.taskStatus.star = false
+  },
   addTask(state, newTask) {
     // 只把任务添加到 store，通过action来发送post请求并将返回值更新到store
     this.state.tasks.push(newTask)
@@ -85,11 +91,30 @@ export const mutations = {
 }
 
 export const getters = {
+  getInboxTasks(state) {
+    return state.tasks.filter(task => !task.list)
+  },
   getUndoneTodos(state) {
     return state.tasks.filter(todo => !todo.done)
   },
   getStarTasks(state) {
     return state.tasks.filter(task => task.star)
+  },
+  getAllTasks(state) {
+    return state.tasks.filter(task => !task.done)
+  },
+  getCustomListTasks(state) {
+    return state.tasks.filter(task => task.list === state.taskStatus.list)
+  },
+  getTodayTasks(state) {
+    return state.tasks.filter((task) => {
+      return task.expireAt && !task.done && moment(task.expireAt) <= moment().set({ hour: 23, minute: 59, second: 59, millisecond: 999 })
+    })
+  },
+  getThisWeekTasks(state) {
+    const todayWeekDay = new Date().getDay()
+    const thisWeekLastDay = moment().add(7 - todayWeekDay, 'days')
+    return state.tasks.filter(task => !task.done && task.expireAt && moment(task.expireAt) <= thisWeekLastDay)
   }
 }
 
@@ -98,7 +123,7 @@ export const actions = {
     ctx.commit('changeTaskCreatorStatus')
     const newTask = await this.$axios.post('/api/tasks', ctx.state.taskStatus)
     ctx.commit('addTask', { ...ctx.state.taskStatus, id: newTask.data.id, _id: newTask.data.task })
-    ctx.commit('changeTaskTitleStatus', '')
+    ctx.commit('clearTaskStatus')
   },
   async addList(ctx, name) {
     // 创建自定义清单，我们需要提供清单名和创建者，并根据接口返回数据更新customList
@@ -110,6 +135,27 @@ export const actions = {
         name: res.data.name
       }
       ctx.commit('addList', newList)
+    }
+    ctx.commit('changeListIndex', ctx.state.customLists[ctx.state.customLists.length - 1].id)
+  },
+  async changeAndAsyncTaskStar(ctx, id) {
+    const task = ctx.state.tasks.find(task => task.id === id)
+    if (task !== -1) {
+      await this.$axios.put('/api/tasks', { _id: task._id, task: { star: !task.star } })
+        .then(() => {
+          ctx.commit('changeTaskStar', id)
+        })
+        .catch(err => console.log(err))
+    }
+  },
+  async changeAndAsyncTaskDone(ctx, id) {
+    const task = ctx.state.tasks.find(task => task.id === id)
+    if (task !== -1) {
+      await this.$axios.put('/api/tasks', { _id: task._id, task: { done: !task.done } })
+        .then(() => {
+          ctx.commit('changeTaskDone', id)
+        })
+        .catch(err => console.log(err))
     }
   }
 }

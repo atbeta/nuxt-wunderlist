@@ -42,6 +42,11 @@ export default {
           this.$store.commit('updateUserInfo', { username, id })
         })
     }
+    if (this.$store.state.auth.loggedIn) {
+      this.$axios.get('/api/lists/' + this.$store.state.auth.user).then((res) => {
+        this.$store.commit('initUserLists', res.data.lists)
+      })
+    }
   },
   methods: {
     handleCollapsed(collapsed) {
