@@ -1,7 +1,7 @@
 <template>
   <b-row class="header-wrapper">
     <b-col class="left-title">
-      <div>{{ title }}</div>
+      <div>{{ currentListName }}</div>
     </b-col>
     <b-col class="right-menu">
       <div>
@@ -21,13 +21,24 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'Header',
-  props: { title: {
-    type: String,
-    default: '标题' } },
   data() {
     return {}
+  },
+  computed: {
+    ...mapState({
+      clickStatus: 'clickStatus',
+      commonLists: 'commonLists',
+      customLists: 'customLists'
+    }),
+    lists() {
+      return this.commonLists.concat(this.customLists)
+    },
+    currentListName() {
+      return this.lists.filter(item => item.id === this.clickStatus.listIndex)[0].name
+    }
   }
 }
 </script>
@@ -42,7 +53,7 @@ export default {
       padding-left: 12px;
       font-size: 20px;
       color: #fff;
-      font-weight: 300;
+      font-weight: 400;
     }
 
     .right-menu {

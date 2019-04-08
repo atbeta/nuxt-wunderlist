@@ -135,7 +135,6 @@ export default {
   },
   methods: {
     handleChangeTitleStatus(e) {
-      console.log(e.target.value)
       this.$store.commit('changeTaskTitleStatus', e.target.value)
     },
     handleChangeExpireStatus() {

@@ -1,13 +1,13 @@
 <template>
   <b-container fluid>
     <b-row class="main-container">
-      <b-col class="sider-container">
-        <Sider />
+      <b-col :class="siderCollapsed?'sider-container sider-collapsed':'sider-container'">
+        <Sider @collapsed="handleCollapsed" />
       </b-col>
       <b-col class="right-container">
         <b-row>
           <b-col cols="12" class="header-container">
-            <Header title="标题" />
+            <Header />
           </b-col>
           <b-col cols="12" class="content-container">
             <Content />
@@ -15,11 +15,6 @@
         </b-row>
       </b-col>
     </b-row>
-    <div>
-      <b-button @click="handleLogout">
-        测试注销
-      </b-button>
-    </div>
   </b-container>
 </template>
 
@@ -36,6 +31,7 @@ export default {
   },
   data() {
     return {
+      siderCollapsed: false
     }
   },
   mounted() {
@@ -48,6 +44,9 @@ export default {
     }
   },
   methods: {
+    handleCollapsed(collapsed) {
+      this.siderCollapsed = collapsed
+    },
     async handleLogout() {
       await this.$auth.logout()
     }
@@ -61,7 +60,11 @@ export default {
   .sider-container{
     flex: 0 0 280px;
     height: 100vh;
+    padding: 0;
     background: $WHITE_SIDER;
+    &.sider-collapsed{
+      flex: 0 0 40px;
+    }
   }
   .right-container{
     height: 100vh;
