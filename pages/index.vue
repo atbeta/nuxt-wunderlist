@@ -51,9 +51,6 @@ export default {
   methods: {
     handleCollapsed(collapsed) {
       this.siderCollapsed = collapsed
-    },
-    async handleLogout() {
-      await this.$auth.logout()
     }
   }
 }

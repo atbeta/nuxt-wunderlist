@@ -61,7 +61,7 @@
           </div>
         </form>
         <div class="signup">
-          <span>还没有账户？</span><span>创建账户</span>
+          <span>还没有账户？</span><span><nuxt-link to="/signup">创建账户</nuxt-link></span>
         </div>
       </b-col>
     </b-row>

@@ -7,9 +7,22 @@
     </b-col>
     <b-col cols="12" class="quick-menu">
       <span class="iconfont iconfont-avatar">&#xe605;</span>
-      <span v-if="!collapsed" class="username">{{ userInfo.username }}</span>
+      <span v-if="!collapsed" class="username">
+        <span @click="toggleDropdown">{{ userInfo.username }}</span>
+        <span class="iconfont iconfont-dropdown" @click="toggleDropdown"> &#xe64c;
+        </span>
+      </span>
       <span v-if="!collapsed" class="iconfont iconfont-bell">&#xe827;</span>
       <span v-if="!collapsed" class="iconfont iconfont-popover">&#xe885;</span>
+      <div v-if="dropDown" class="dropdown-container">
+        <ul class="dropdown-list">
+          <li>账户设置</li>
+          <li>恢复已删除的清单</li>
+          <li @click="handleLogout">
+            登出
+          </li>
+        </ul>
+      </div>
     </b-col>
     <b-col cols="12" class="sider-list">
       <ul>
@@ -66,7 +79,8 @@ export default {
     return {
       collapsed: false,
       listName: '',
-      newListModal: 'new-list-modal'
+      newListModal: 'new-list-modal',
+      dropDown: false
     }
   },
   computed: {
@@ -126,6 +140,12 @@ export default {
         bvModalEvt.preventDefault()
       }
     },
+    toggleDropdown() {
+      this.dropDown = !this.dropDown
+    },
+    async handleLogout() {
+      await this.$auth.logout()
+    },
     handleSubmit() {
       this.$store.dispatch('addList', this.listName)
       this.$refs.modal.hide()
@@ -149,7 +169,7 @@ export default {
         }
         default: { // TODO 这里不知道怎么过程中那么多Bug
           const _id = this.customLists.filter(list => list.id === index)[0]._id
-          return this.tasks.filter(task => task.list === _id).length
+          return this.tasks.filter(task => !task.done && task.list === _id).length
         }
       }
     },
@@ -172,7 +192,7 @@ export default {
         }
         default: { // TODO 这里不知道怎么过程中那么多Bug
           const _id = this.customLists.filter(list => list.id === index)[0]._id
-          return this.tasks.filter(task => task.list === _id).filter(task => task.expireAt && moment(task.expireAt) < moment()).length
+          return this.tasks.filter(task => !task.done && task.list === _id).filter(task => task.expireAt && moment(task.expireAt) < moment()).length
         }
       }
     }
@@ -208,10 +228,29 @@ export default {
     line-height: 45px;
     display: flex;
     flex-flow: row nowrap;
-    span{
+    >span {
       flex: 0 0 25px;
-      &:nth-child(2){
+
+      &.username {
         flex: 1;
+        max-width: 168px;
+        >span:first-child{
+          float: left;
+          max-width: 150px;
+          padding: 0 5px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          font-size: 14px;
+          &:hover{
+            cursor: pointer;
+          }
+        }
+        >span:last-child{
+          &:hover{
+            cursor: pointer;
+          }
+        }
       }
     }
     span.iconfont-avatar{
@@ -227,6 +266,37 @@ export default {
       font-size: 20px;
       font-weight: 300;
       margin-right: 8px;
+    }
+    .dropdown-container{
+      position: absolute;
+      top: 40px;
+      left: 20px;
+      height: 120px;
+      width: 200px;
+      z-index: 1000;
+      background: #fff;
+      box-shadow: 0 0 5px #ccc;
+      border-radius: 3px;
+      .dropdown-list{
+        list-style-type: none;
+        padding-left: 0;
+        li{
+          height: 36px;
+          line-height: 36px;
+          font-size: 14px;
+          text-indent: 10px;
+          &:hover{
+            background: #4f88da;
+            color: #fff;
+            cursor: pointer;
+          }
+          &:last-child{
+            height: 45px;
+            line-height: 45px;
+            border-top: 1px solid #eee;
+          }
+        }
+      }
     }
   }
   .sider-list{
