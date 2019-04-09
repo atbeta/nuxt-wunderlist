@@ -27,6 +27,7 @@ module.exports = {
   ** Global CSS
   */
   css: [
+    'ant-design-vue/dist/antd.css',
     './assets/css/variables.scss',
     './assets/iconfont/iconfont.css'
   ],
@@ -34,7 +35,7 @@ module.exports = {
   /*
   ** Plugins to load before mounting the App
   */
-  plugins: [],
+  plugins: ['@/plugins/antd-ui'],
 
   /*
   ** Nuxt.js modules

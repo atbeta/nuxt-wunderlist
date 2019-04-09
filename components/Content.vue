@@ -14,13 +14,28 @@
           @input="handleChangeTitleStatus"
           @keyup.enter="handleAddTask"
         >
-        <span
-          v-if="inputFocus"
-          class="iconfont iconfont-expire"
-          @click="handleChangeExpireStatus"
+        <a-date-picker
+          v-model="expire"
+          class="input-date-wrapper"
+          placeholder=""
+          :allow-clear="false"
+          :show-today="false"
+          @change="confirmExpireDate"
         >
-          {{ !taskStatus.expireAt?'&#xe71f;':'&#xe78d;' }}
-        </span>
+          <span
+            v-if="inputFocus"
+            slot="suffixIcon"
+            class="iconfont iconfont-expire"
+            @click="handleChangeExpireStatus"
+          >
+            {{ !taskStatus.expireAt?'&#xe71f;':'&#xe78d;' }}
+          </span>
+          <div slot="renderExtraFooter" class="date-picker-footer">
+            <a-button @click="clearExpireDate">
+              移除到期日
+            </a-button>
+          </div>
+        </a-date-picker>
         <span
           v-if="inputFocus"
           class="iconfont iconfont-star"
@@ -134,7 +149,7 @@ export default {
     return {
       inputFocus: true,
       showDoneList: false,
-      expire: new Date()
+      expire: moment()
     }
   },
   computed: {
@@ -208,7 +223,7 @@ export default {
       this.$store.commit('changeTaskExpireStatus', moment(this.expire).format())
     },
     clearExpireDate() {
-      this.expire = new Date()
+      this.expire = moment()
       this.$store.commit('changeTaskExpireStatus', '')
     },
     handleChangeTitleStatus(e) {
@@ -239,37 +254,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  /deep/ .expire-date-picker-wrapper{
-    line-height: 30px;
-    input.expire-date-picker{
-      width: 20px;
-      height: 20px;
-      padding: 0;
-      visibility: hidden;
-    }
-    .datepicker::before{
-      width: 0;
-    }
-    .datepicker-popup{
-      right: 0;
-      top: 30px;
-      a.calendar-date{
-        line-height: 30px;
-        &.calendar-date-selected{
-          color: #fff;
-          background: #5798fd;
-          border-radius: 3px;
-        }
-      }
-    }
-    .datepicker__buttons button{
-      width: 90px;
-      height: 30px;
-      line-height: 30px;
-      padding: 0;
-      margin: 0 auto;
-    }
-  }
   .content-input-container {
     padding-left: 0;
     padding-right: 0;
@@ -304,7 +288,6 @@ export default {
       &.iconfont-plus{
       }
       &.iconfont-expire{
-        margin-right: -20px;
       }
       &.iconfont-star{
         font-weight: 700;
@@ -367,6 +350,25 @@ export default {
           box-shadow: 0 0 0;
         }
       }
+    }
+  }
+  .input-date-wrapper {
+    width: 40px;
+    height: 46px;
+    line-height: 46px;
+    background: $GREEN_INPUT;
+
+    /deep/ .ant-calendar-picker-input {
+      border: none;
+      background: $GREEN_INPUT;
+      color: transparent;
+    }
+  }
+
+  .date-picker-footer {
+    button.ant-btn {
+      width: 100%;
+      margin: 10px auto;
     }
   }
 </style>

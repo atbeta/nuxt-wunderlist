@@ -65,6 +65,7 @@
         </div>
       </b-col>
     </b-row>
+    <a-layout>hello</a-layout>
   </b-container>
 </template>
 
