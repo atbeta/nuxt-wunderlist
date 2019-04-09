@@ -1,5 +1,5 @@
 import Router from 'koa-router'
-import { User } from '../db/models'
+import {Task, User} from '../db/models'
 import passport from '../utils/passport'
 
 const router = new Router({
@@ -19,9 +19,19 @@ router.post('/signup', async (ctx) => {
     }
     return
   }
-  const newUser = await User.create({ username: username, password: password })
+  // 得到当前最大的id
+  const maxIdUser = await User.find()
+    .sort({ id: -1 })
+    .limit(1)
+  const id = maxIdUser[0].id + 1
+  const newUser = await User.create({ id: id, username: username, password: password })
   if (newUser) {
-    ctx.body = newUser
+    ctx.body = {
+      code: 0,
+      msg: '注册用户成功',
+      username: newUser.username,
+      _id: newUser._id
+    }
   }
 })
 

@@ -98,7 +98,7 @@ export const getters = {
     return state.tasks.filter(todo => !todo.done)
   },
   getStarTasks(state) {
-    return state.tasks.filter(task => task.star)
+    return state.tasks.filter(task => !task.done && task.star)
   },
   getAllTasks(state) {
     return state.tasks.filter(task => !task.done)

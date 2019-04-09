@@ -26,8 +26,8 @@
           <span v-if="list.id===-1" class="iconfont" style="color: #9d5e14">&#xe67b;</span>
           <span v-if="list.id>=0" class="iconfont">&#xe611;</span>
           <span v-if="!collapsed">{{ list.name }}</span>
-          <span v-if="!collapsed" class="expire-count">{{ showExpireCount(list.id) }}</span>
-          <span v-if="!collapsed" class="total-count">{{ showTotalCount(list.id) }}</span>
+          <span v-if="!collapsed&&showExpireCount(list.id)!==0" class="expire-count">{{ showExpireCount(list.id) }}</span>
+          <span v-if="!collapsed&&showTotalCount(list.id)!==0" class="total-count">{{ showTotalCount(list.id) }}</span>
         </li>
       </ul>
     </b-col>
@@ -133,7 +133,7 @@ export default {
     showTotalCount(index) {
       switch (index) {
         case -5: {
-          return this.getInboxTasks.length
+          return this.getInboxTasks.filter(task => !task.done).length
         }
         case -4: {
           return this.getStarTasks.length
@@ -247,6 +247,10 @@ export default {
       }
       span:nth-child(2) {
         flex: 1;
+        max-width: 224px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
       span.expire-count {
         width: 20px;

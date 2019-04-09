@@ -1,7 +1,7 @@
 <template>
   <b-container fluid>
     <b-row class="logo-container">
-      <b-col cols="4" class="logo">
+      <b-col class="logo">
         <div class="logo-img-wrapper">
           <img src="../assets/img/logo.png" alt="">
         </div>
@@ -13,7 +13,7 @@
       </b-col>
     </b-row>
     <b-row class="form-container">
-      <b-col cols="4" class="login-form">
+      <b-col cols="4" class="signup-form">
         <form>
           <div class="input-wrapper">
             <span class="iconfont">&#xe623;</span>
@@ -52,7 +52,7 @@
             />
           </div>
           <div class="button-wrapper">
-            <b-button class="button-login" @click="handleLogin">
+            <b-button class="button-signup" @click="handleLogin">
               登录
             </b-button>
           </div>
@@ -69,6 +69,7 @@
 </template>
 
 <script>
+import CryptoJS from 'crypto-js'
 export default {
   middleware: 'auth',
   name: 'Login',
@@ -127,7 +128,7 @@ export default {
           .loginWith('local', {
             data: {
               username: this.FormData.username,
-              password: this.FormData.password
+              password: CryptoJS.MD5(this.FormData.password).toString()
             }
           })
         this.apiValidate = this.$store.state.auth.loggedIn
@@ -153,7 +154,7 @@ export default {
   .form-container{
     justify-content: center;
     margin-top: 30px;
-    .login-form{
+    .signup-form{
       flex: 0 0 350px;
       height: 235px;
       padding-left: 0;
@@ -190,7 +191,7 @@ export default {
       .button-wrapper{
         padding-left: 15px;
         padding-right: 15px;
-        .button-login{
+        .button-signup{
           width: 100%;
           height: 45px;
           border: 0;
