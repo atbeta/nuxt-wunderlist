@@ -35,7 +35,8 @@ router.post('/lists', async (ctx, next) => {
     const maxIdList = await List.find()
       .sort({ id: -1 })
       .limit(1)
-    const id = maxIdList[0].id + 1
+    let id = 0
+    if (maxIdList.length > 0) { id = maxIdList[0].id + 1 }
     const newList = {
       id: id,
       name: name,

@@ -52,7 +52,7 @@
             />
           </div>
           <div class="button-wrapper">
-            <b-button class="button-signup" type="submit" @click="handleLogin">
+            <b-button class="button-login" type="submit" @click="handleLogin">
               登录
             </b-button>
           </div>
@@ -191,7 +191,7 @@ export default {
       .button-wrapper{
         padding-left: 15px;
         padding-right: 15px;
-        .button-signup{
+        .button-login{
           width: 100%;
           height: 45px;
           border: 0;

@@ -214,13 +214,20 @@ export default {
   mounted() {
     if (this.auth.loggedIn) {
       this.$axios.get('/api/tasks/' + this.auth.user).then((res) => {
-        this.$store.commit('initUserTasks', res.data.tasks)
+        const fixedTimeTasks = res.data.tasks.map((task) => {
+          if (task.expireAt) { // 解决Mongodb数据库中使用UTC时间的问题, moment会自动转换为当前时区，无需添加参数
+            task.expireAt = moment(task.expireAt).format()
+          }
+          task.createAt = moment(task.createAt).format()
+          return task
+        })
+        this.$store.commit('initUserTasks', fixedTimeTasks)
       })
     }
   },
   methods: {
-    confirmExpireDate() {
-      this.$store.commit('changeTaskExpireStatus', moment(this.expire).format())
+    confirmExpireDate() { // 创建任务的时候，如果有过期日期，就将时间设为当天最后一毫秒，避免出现错误的过期提示
+      this.$store.commit('changeTaskExpireStatus', moment(this.expire).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).format())
     },
     clearExpireDate() {
       this.expire = moment()

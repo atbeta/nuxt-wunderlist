@@ -115,7 +115,7 @@ export default {
         this.$store.commit('changeTaskStarStatus')
       }
       if (key === -3) {
-        this.$store.commit('changeTaskExpireStatus', moment().format())
+        this.$store.commit('changeTaskExpireStatus', moment().set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).format())
       }
     },
     toggleCollapse() {
