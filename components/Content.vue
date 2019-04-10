@@ -227,7 +227,9 @@ export default {
       this.$store.commit('changeTaskExpireStatus', '')
     },
     handleChangeTitleStatus(e) {
-      this.$store.commit('changeTaskTitleStatus', e.target.value)
+      if (e.target.value.trim().length > 0) {
+        this.$store.commit('changeTaskTitleStatus', e.target.value.trim())
+      }
     },
     handleChangeExpireStatus() {
     },
@@ -235,7 +237,9 @@ export default {
       this.$store.commit('changeTaskStarStatus')
     },
     handleAddTask() {
-      this.$store.dispatch('addTask')
+      if (this.taskStatus.title) {
+        this.$store.dispatch('addTask')
+      }
     },
     handleTaskClick(index) {
       this.$store.commit('changeTaskIndex', index)

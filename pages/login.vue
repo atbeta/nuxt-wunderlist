@@ -13,8 +13,8 @@
       </b-col>
     </b-row>
     <b-row class="form-container">
-      <b-col cols="4" class="signup-form">
-        <form>
+      <b-col cols="4" class="login-form">
+        <form @submit.prevent="handleLogin">
           <div class="input-wrapper">
             <span class="iconfont">&#xe623;</span>
             <input
@@ -52,7 +52,7 @@
             />
           </div>
           <div class="button-wrapper">
-            <b-button class="button-signup" @click="handleLogin">
+            <b-button class="button-signup" type="submit" @click="handleLogin">
               登录
             </b-button>
           </div>
@@ -154,7 +154,7 @@ export default {
   .form-container{
     justify-content: center;
     margin-top: 30px;
-    .signup-form{
+    .login-form{
       flex: 0 0 350px;
       height: 235px;
       padding-left: 0;
