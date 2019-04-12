@@ -2,7 +2,8 @@ import moment from 'moment'
 export const state = () => ({
   clickStatus: {
     listIndex: -5,
-    taskIndex: 0
+    taskIndex: 0,
+    taskTitle: ''
   },
   userInfo: {
     isLogin: false,
@@ -46,6 +47,7 @@ export const mutations = {
   },
   changeTaskIndex(state, index) {
     state.clickStatus.taskIndex = index
+    state.clickStatus.taskTitle = state.tasks.find(item => item.id === index).title
   },
   changeTaskTitleStatus(state, title) {
     state.taskStatus.title = title
@@ -87,6 +89,13 @@ export const mutations = {
   changeTaskStar(state, id) {
     const task = state.tasks.find(task => task.id === id)
     if (task !== -1) { task.star = !task.star }
+  },
+  changeClickTitle(state, title) {
+    state.clickStatus.taskTitle = title
+  },
+  changeTaskTitle(state, { id, title }) {
+    const task = state.tasks.find(task => task.id === id)
+    if (task !== -1) { task.title = title }
   }
 }
 
@@ -154,6 +163,16 @@ export const actions = {
       await this.$axios.put('/api/tasks', { _id: task._id, task: { done: !task.done } })
         .then(() => {
           ctx.commit('changeTaskDone', id)
+        })
+        .catch(err => console.log(err))
+    }
+  },
+  async changeAndAsyncTaskTitle(ctx, { id, title }) {
+    const task = ctx.state.tasks.find(task => task.id === id)
+    if (task !== -1) {
+      await this.$axios.put('/api/tasks', { _id: task._id, task: { title: title } })
+        .then(() => {
+          ctx.commit('changeTaskTitle', { id, title })
         })
         .catch(err => console.log(err))
     }

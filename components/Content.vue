@@ -52,6 +52,7 @@
           :key="task.id"
           :class="task.id===clickStatus.taskIndex?'selected':''"
           @click="handleTaskClick(task.id)"
+          @dblclick="showDrawer"
         >
           <span
             v-if="!task.done"
@@ -98,6 +99,7 @@
           :key="task.id"
           :class="task.id===clickStatus.taskIndex?'selected':''"
           @click="handleTaskClick(task.id)"
+          @dblclick="showDrawer"
         >
           <span
             v-if="!task.done"
@@ -134,11 +136,29 @@
         </li>
       </ul>
     </b-col>
+    <b-col>
+      <a-drawer
+        placement="right"
+        class="task-info-drawer"
+        width="360"
+        :closable="false"
+        :visible="visible"
+        @close="onClose"
+      >
+        <template v-slot:title>
+          <input
+            type="text"
+            :value="clickStatus.taskTitle"
+            @change="handleChangeClickTitleStatus"
+            @keyup.enter="handleChangeTaskTitle"
+          >
+        </template>
+      </a-drawer>
+    </b-col>
   </b-row>
 </template>
 
 <script>
-// import VueDatepickerLocal from 'vue-datepicker-local'
 import moment from 'moment'
 import { mapState, mapGetters } from 'vuex'
 export default {
@@ -149,7 +169,8 @@ export default {
     return {
       inputFocus: true,
       showDoneList: false,
-      expire: moment()
+      expire: moment(),
+      visible: false
     }
   },
   computed: {
@@ -257,8 +278,21 @@ export default {
     handleChangeTaskStar(id) {
       this.$store.dispatch('changeAndAsyncTaskStar', id)
     },
+    handleChangeClickTitleStatus(e) {
+      console.log(e.target.value)
+      this.$store.commit('changeClickTitle', e.target.value)
+    },
+    handleChangeTaskTitle() {
+      this.$store.dispatch('changeAndAsyncTaskTitle', { id: this.clickStatus.taskIndex, title: this.clickStatus.taskTitle })
+    },
     toggleDoneList() {
       this.showDoneList = !this.showDoneList
+    },
+    showDrawer() {
+      this.visible = true
+    },
+    onClose() {
+      this.visible = false
     }
   }
 }
@@ -319,6 +353,7 @@ export default {
         display: flex;
         flex-flow: row nowrap;
         font-size: 14px;
+        user-select: none;
         span.iconfont{
           flex: 0 0 20px;
           padding-left: 8px;
