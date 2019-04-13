@@ -1,22 +1,52 @@
-# nuxt-wunderlist
+# Nuxt Wunderlist
+## 项目简介
+本项目以学习为主要目的，最终目标是使用 Nuxt 框架复刻奇妙清单 (Wunderlist)，计划实现 90% 以上的界面还原和 80% 以上的功能还原。
 
-> My dazzling Nuxt.js project
+## 技术栈
 
-## Build Setup
++ Nuxt
++ Koa2
++ Vue + Vuex
++ Ant Design Vue / Bootstrap
++ SASS
++ Mongodb + Mongoose + Redis
++ Passport Local + Nuxt Auth Module
 
-``` bash
-# install dependencies
-$ yarn install
-
-# serve with hot reload at localhost:3000
-$ yarn run dev
-
-# build for production and launch server
-$ yarn run build
-$ yarn start
-
-# generate static project
-$ yarn run generate
+## 运行方式
+```bash
+npm i babel-cli -g // 项目需要用户安装 babel-node
+npm install
+npm run dev
 ```
+## 功能介绍
 
-For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
+### 已实现功能
+* 基本符合 RestFul 标准的 API
+* 用户注册、登录、注销功能
+* 清单的新增、删除和名称修改功能
+* 任务的新增、删除、名称修改、到期日修改、星标状态修改功能
+* 左侧清单中对应的过期任务数量和总任务数量的展示
+* 切换列表时同步调整右侧新建任务逻辑
+
+### 计划实现功能
+* 切换左侧清单时，调整右则列表展示方式（如星标按清单区分为多个列表，周按日期区分为多个列表）
+* 右侧列表任务总数为0时，切换背景
+* 右侧背景的修改功能
+* 用户头像的修改功能
+* 恢复已删除清单功能
+* 任务到期精确到时分（目前仅以天为单位）
+* 为清单和任务等增加友好的右键菜单
+
+### 计划改进的功能
+* 代码优化：由于奇妙清单的功能远较本人想象的复杂，初期缺乏整体规划导致代码较为混乱，主要改进方向为拆分 Content 组件，抽离重复 CSS 内容至 Mixins 等
+* 数据同步方式：目前所有的交互都是同步数据库，因此存在一定的延迟，而奇妙清单本身是使用的 WebSocket，需要了解后看是否能够改进
+* 注册及登录：增加更为友好的注册及登录错误信息提示，可能会尝试增加邮箱注册，以及验证码功能，目的是实现找回密码功能
+* 移动端适配：目前并未针对移动端进行特殊处理，需要增加移动端的适配以及节流处理等
+
+### 暂时放弃的功能
+* 多人协作
+* 任务提醒
+* 子任务功能
+* 附件功能
+* 重复任务功能
+
