@@ -8,11 +8,12 @@
 + Koa2
 + Vue + Vuex
 + Ant Design Vue / Bootstrap
-+ SASS
++ Sass
 + Mongodb + Mongoose + Redis
 + Passport Local + Nuxt Auth Module
 
 ## 运行方式
+项目中使用的是本人测试数据库，如果需要使用自己的数据库请修改`/server/db/config.js`文件内容
 ```bash
 npm i babel-cli -g // 项目需要用户安装 babel-node
 npm install
