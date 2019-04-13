@@ -15,8 +15,9 @@ export default {
         name: res.data.name
       }
       ctx.commit('addList', newList)
+      ctx.commit('changeListIndex', newList.id)
+      ctx.commit('changeTaskListStatus', newList.id)
     }
-    ctx.commit('changeListIndex', ctx.state.customLists[ctx.state.customLists.length - 1].id)
   },
   async changeAndAsyncTaskStar(ctx, id) {
     const task = ctx.state.tasks.find(task => task.id === id)
@@ -74,9 +75,9 @@ export default {
       })
       .catch(err => console.log(err))
   },
-  async deleteList(ctx, id) {
+  deleteList(ctx, id) {
     const list = ctx.state.customLists.find(task => task.id === id)
-    await this.$axios.delete('/api/lists', { data: { list: list._id } })
+    this.$axios.delete('/api/lists', { data: { list: list._id } })
       .then(() => {
         ctx.commit('deleteList', id)
       })

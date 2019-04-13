@@ -400,6 +400,7 @@ export default {
     },
     handleDeleteTask() {
       this.$store.dispatch('deleteTask', this.clickStatus.taskIndex)
+      this.visible = false
     },
     toggleDoneList() {
       this.showDoneList = !this.showDoneList
@@ -412,9 +413,6 @@ export default {
     },
     closePanel() {
       this.datepickerOpen = false
-    },
-    resetPanel() {
-      this.value = null
     },
     onClose() {
       this.datepickerOpen = false // 关抽屉的时候如果日期选择器没关也一起关了

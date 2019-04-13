@@ -2,7 +2,7 @@
   <b-row class="sider-wrapper">
     <b-col cols="12" class="sider-header">
       <span class="iconfont iconfont-menu" @click="toggleCollapse">&#xe790;</span>
-      <span v-if="!collapsed" class="sider-header-search">搜索</span>
+      <span v-if="!collapsed" class="sider-header-search"></span>
       <span v-if="!collapsed" class="iconfont iconfont-search">&#xe604;</span>
     </b-col>
     <b-col cols="12" class="quick-menu">
@@ -31,6 +31,7 @@
           :key="list.id"
           :class="list.id===clickStatus.listIndex?'selected':''"
           @click="handleListClick(list.id)"
+          @dblclick="handleListDoubleClick"
         >
           <span v-if="list.id===-5" class="iconfont" style="color: #228bef">&#xe6e5;</span>
           <span v-if="list.id===-4" class="iconfont" style="color: #e2695b">&#xe64b;</span>
@@ -171,9 +172,6 @@ export default {
       this.collapsed = !this.collapsed
       this.$emit('collapsed', this.collapsed)
     },
-    showSiderIcon(id) {
-      console.log(id)
-    },
     clearAndFocus() {
       this.listName = ''
       this.$refs.focusThis.focus()
@@ -190,6 +188,11 @@ export default {
     showListDeleteModal() {
       this.$refs.modalListEdit.hide()
       this.$refs.modalListDelete.show()
+    },
+    handleListDoubleClick() {
+      if (this.clickStatus.listIndex >= 0) {
+        this.$refs.modalListEdit.show()
+      }
     },
     handleOk(bvModalEvt) {
       // Prevent modal from closing
@@ -211,9 +214,14 @@ export default {
     handleDeleteList(id) {
       console.log(id)
       this.$store.dispatch('deleteList', id)
+      this.$store.commit('deleteTasksOfList', id) // 清空store中所有被删除list中的任务，无须刷新就能响应
+      this.$store.commit('changeListIndex', -5) // 当前列表调整为第一个
     },
     toggleDropdown() {
       this.dropDown = !this.dropDown
+      if (this.dropDown) {
+        setTimeout(() => { this.dropDown = false }, 5000) // TODO: 应该加个蒙板或者有什么好办法隐藏
+      }
     },
     async handleLogout() {
       await this.$auth.logout()
@@ -248,7 +256,7 @@ export default {
     showExpireCount(index) {
       switch (index) {
         case -5: {
-          return this.getInboxTasks.filter(task => task.expireAt && moment(task.expireAt) < moment()).length
+          return this.getInboxTasks.filter(task => !task.done && task.expireAt && moment(task.expireAt) < moment()).length
         }
         case -4: {
           return this.getStarTasks.filter(task => task.expireAt && moment(task.expireAt) < moment()).length
@@ -384,6 +392,7 @@ export default {
       align-items: center;
       font-size: 14px;
       cursor: pointer;
+      user-select: none;
       span:first-child{
         margin: 0 12px;
       }
@@ -492,7 +501,7 @@ export default {
       }
     }
   }
-  /deep/ .list-edit-modal{
+  /deep/ .list-edit-modal{ // TODO：这里和Content中的完全一样，考虑拿出来共用
     .modal-dialog{
       width: 400px;
     }

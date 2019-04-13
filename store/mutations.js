@@ -88,5 +88,9 @@ export default {
     const listIndex = state.customLists.findIndex(list => list.id === id)
     console.log(listIndex)
     if (listIndex !== -1) { state.customLists.splice(listIndex, 1) }
+  },
+  deleteTasksOfList(state, id) { // 删除某id的清单的所有任务，用于即时更新任务状态
+    const list = state.customLists.find(list => list.id === id)
+    state.tasks = state.tasks.filter(task => task.list !== list._id)
   }
 }

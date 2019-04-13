@@ -96,20 +96,13 @@ router.delete('/lists', async (ctx, next) => {
     const _id = ctx.request.body.list
     const list = await List.findOneAndUpdate({ _id: _id }, { status: -1 })
     const tasksToDelete = list.tasks
-    await Task.updateMany(
+    await Task.updateMany( // TODO: 这里就算是操作正常也会返回错误，暂时不检查 updateMany 是不是返回 error，否则接口间隙404
       { _id: { $in: tasksToDelete } },
-      { $set: { status: -1 } },
-      function (err, res) {
-        if (err) {
-          console.log(err)
-        } else {
-          ctx.body = {
-            code: 0,
-            msg: '删除清单成功'
-          }
-        }
-      }
-    )
+      { $set: { status: -1 } })
+    ctx.body = {
+      code: 0,
+      msg: '删除清单成功'
+    }
   } else {
     ctx.body = {
       code: 1,

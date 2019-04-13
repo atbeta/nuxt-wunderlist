@@ -16,7 +16,7 @@ import dbConfig from './db/config'
 
 const app = new Koa()
 
-const client = redis.createClient(6379, "hk.pup.pub")
+const client = redis.createClient(dbConfig.redis.port, dbConfig.redis.host)
 client.on('error', function (error) {
   console.log(error)
 })
