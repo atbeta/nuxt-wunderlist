@@ -64,6 +64,31 @@ router.post('/lists', async (ctx, next) => {
   }
 })
 
+// 修改清单，只能修改清单名称
+router.put('/lists', async (ctx, next) => {
+  if (ctx.isAuthenticated()) {
+    const _id = ctx.request.body.list
+    const name = ctx.request.body.name
+    const list = await List.findOneAndUpdate({ _id: _id }, { name: name })
+    if (list) {
+      ctx.body = {
+        code: 0,
+        msg: '删除清单成功'
+      }
+    } else {
+      ctx.body = {
+        code: -1,
+        msg: '未找到清单'
+      }
+    }
+  } else {
+    ctx.body = {
+      code: 1,
+      msg: '请先登录'
+    }
+  }
+})
+
 // 删除清单，需要前端提供要删除的清单_id
 // 我们除了要删除这个清单，还需要将所有该清单中的任务标记为删除
 router.delete('/lists', async (ctx, next) => {
@@ -87,7 +112,7 @@ router.delete('/lists', async (ctx, next) => {
     )
   } else {
     ctx.body = {
-      code: -1,
+      code: 1,
       msg: '请先登录'
     }
   }

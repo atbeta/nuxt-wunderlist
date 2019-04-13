@@ -1,7 +1,7 @@
 <template>
   <b-row class="header-wrapper">
     <b-col class="left-title">
-      <div>{{ currentListName }}</div>
+      <div>{{ getCurrentListName }}</div>
     </b-col>
     <b-col class="right-menu">
       <div>
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 export default {
   name: 'Header',
   data() {
@@ -33,12 +33,9 @@ export default {
       commonLists: 'commonLists',
       customLists: 'customLists'
     }),
-    lists() {
-      return this.commonLists.concat(this.customLists)
-    },
-    currentListName() {
-      return this.lists.filter(item => item.id === this.clickStatus.listIndex)[0].name
-    }
+    ...mapGetters({
+      getCurrentListName: 'getCurrentListName'
+    })
   }
 }
 </script>

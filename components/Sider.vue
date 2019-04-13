@@ -41,6 +41,14 @@
           <span v-if="!collapsed">{{ list.name }}</span>
           <span v-if="!collapsed&&showExpireCount(list.id)!==0" class="expire-count">{{ showExpireCount(list.id) }}</span>
           <span v-if="!collapsed&&showTotalCount(list.id)!==0" class="total-count">{{ showTotalCount(list.id) }}</span>
+          <span
+            v-if="list.id>=0&&clickStatus.listIndex===list.id"
+            class="iconfont iconfont-edit"
+            style="margin-right: 8px"
+            @click="showListEditModal"
+          >
+            &#xe624;
+          </span>
         </li>
       </ul>
     </b-col>
@@ -67,6 +75,45 @@
         </form>
       </b-modal>
     </b-col>
+    <b-col>
+      <b-modal
+        ref="modalListEdit"
+        class="list-edit-modal"
+        title="编辑清单"
+        :hide-header-close="true"
+        ok-title="完成"
+        cancel-title="取消"
+        @ok="handleChangeListName"
+        @shown="clearAndFocusListEdit"
+      >
+        <form @submit.prevent="handleChangeListName">
+          <b-form-input ref="listEditInput" :value="getCurrentListName" @input="updateNewListName" />
+        </form>
+        <div class="delete-icon">
+          <span class="iconfont" @click="showListDeleteModal">&#xe659;</span>
+        </div>
+      </b-modal>
+    </b-col>
+    <b-col>
+      <b-modal
+        ref="modalListDelete"
+        class="delete-modal"
+        :hide-header-close="true"
+        ok-title="删除清单"
+        cancel-title="取消"
+        @ok="handleDeleteList(clickStatus.listIndex)"
+      >
+        <div class="delete-modal-body">
+          <div class="delete-modal-logo">
+            <img src="../assets/img/logo.png" alt="LOGO">
+          </div>
+          <div class="delete-modal-text">
+            <p>“{{ getCurrentListName }}”将被永久删除。</p>
+            <p>你将无法撤销此操作。</p>
+          </div>
+        </div>
+      </b-modal>
+    </b-col>
   </b-row>
 </template>
 
@@ -79,6 +126,7 @@ export default {
     return {
       collapsed: false,
       listName: '',
+      newListName: '',
       newListModal: 'new-list-modal',
       dropDown: false
     }
@@ -94,6 +142,7 @@ export default {
       customLists: 'customLists'
     }),
     ...mapGetters({
+      getCurrentListName: 'getCurrentListName',
       getInboxTasks: 'getInboxTasks', // 这个包括了已完成和未完成的
       getUndoneTodos: 'getUndoneTodos',
       getStarTasks: 'getStarTasks',
@@ -129,8 +178,18 @@ export default {
       this.listName = ''
       this.$refs.focusThis.focus()
     },
+    clearAndFocusListEdit() {
+      this.$refs.listEditInput.focus()
+    },
     showModal() {
       this.$refs.modal.show()
+    },
+    showListEditModal() {
+      this.$refs.modalListEdit.show()
+    },
+    showListDeleteModal() {
+      this.$refs.modalListEdit.hide()
+      this.$refs.modalListDelete.show()
     },
     handleOk(bvModalEvt) {
       // Prevent modal from closing
@@ -139,6 +198,19 @@ export default {
       } else {
         bvModalEvt.preventDefault()
       }
+    },
+    updateNewListName(value) {
+      this.newListName = value
+    },
+    handleChangeListName() {
+      if (this.newListName.trim().length > 0) {
+        this.$store.dispatch('changeAndAsyncListName', { id: this.clickStatus.listIndex, name: this.newListName })
+      }
+      this.$refs.modalListEdit.hide()
+    },
+    handleDeleteList(id) {
+      console.log(id)
+      this.$store.dispatch('deleteList', id)
     },
     toggleDropdown() {
       this.dropDown = !this.dropDown
@@ -349,6 +421,11 @@ export default {
           background: #b1463f;
         }
       }
+      span.iconfont-edit{
+        &:hover{
+          color: #000;
+        }
+      }
     }
   }
   .sider-footer{
@@ -415,4 +492,109 @@ export default {
       }
     }
   }
+  /deep/ .list-edit-modal{
+    .modal-dialog{
+      width: 400px;
+    }
+    .modal-header{
+      height: 50px;
+      h5{
+        width: 100%;
+        text-align: center;
+        font-size: 16px;
+      }
+    }
+    .modal-body{
+      input{
+        &:focus{
+          border: 1px solid #6da0e1;
+          box-shadow: 0 0 0;
+        }
+      }
+    }
+    .modal-footer{
+      button{
+        width: 100px;
+        height: 30px;
+        line-height: 15px;
+        &:first-child{
+          background: #fafafa;
+          color: $BLACK_TEXT;
+          border: 1px solid #e0e0df;
+        }
+        &:last-child {
+          background: #4f88da;
+          color: $WHITE_TEXT;
+          border: 1px solid #4f88da;
+        }
+      }
+    }
+    .delete-icon{
+      padding-top: 36px;
+      margin-bottom: -60px;
+      width: 40px;
+      &:hover{
+        cursor: pointer;
+      }
+    }
+  }
+/deep/ .delete-modal{
+  .modal-dialog{
+    width: 400px;
+    height: 180px;
+  }
+  .modal-header{
+    border: 0;
+    padding: 0;
+  }
+  .modal-body{
+    padding: 25px 25px;
+  }
+  .modal-footer{
+    height: 54px;
+    button{
+      width: 140px;
+      height: 30px;
+      line-height: 15px;
+      font-size: 14px;
+      font-weight: 700;
+      &:first-child{
+        background: #fafafa;
+        color: $BLACK_TEXT;
+        border: 1px solid #e0e0df;
+      }
+      &:last-child{
+        background: #4f88da;
+        color:$WHITE_TEXT;
+        border: 1px solid #4f88da;
+      }
+    }
+  }
+  .delete-modal-body{
+    display: flex;
+    flex-flow: row nowrap;
+    .delete-modal-logo{
+      flex: 0 0 64px;
+      margin-right: 25px;
+      img{
+        display: inline-block;
+        width: 100%;
+      }
+    }
+    .delete-modal-text{
+      flex: 1;
+      p:first-child{
+        color: #000;
+        font-weight: 700;
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+      p:last-child{
+        margin-top: 10px;
+        color: #8b8b8b;
+        font-size: 12px;
+      }
+    }
+  }
+}
 </style>
