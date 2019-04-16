@@ -10,6 +10,11 @@
         <h1>免费获取奇妙清单</h1>
       </b-col>
     </b-row>
+    <b-row v-if="!localValidate||!apiValidate" class="login-inform-container">
+      <b-col cols="4" class="login-fail-inform">
+        <span>{{ validateInfo }}</span>
+      </b-col>
+    </b-row>
     <b-row class="form-and-info-container">
       <b-col md="6" cols="12" class="form-outer-container">
         <b-row class="form-container">
@@ -127,7 +132,10 @@ export default {
         username: true,
         password: true,
         password2: true
-      }
+      },
+      localValidate: true,
+      apiValidate: true,
+      validateInfo: ''
     }
   },
   methods: {
@@ -144,33 +152,36 @@ export default {
         this.validateResult.password2 = false
         return -1
       } else {
-        if (username.trim() === '') {
-          this.validateResult.username = false
-        }
-        if (password === '') {
-          this.validateResult.password = false
-        }
-        if (password2 === '') {
-          this.validateResult.password2 = false
-        }
+        this.validateResult.username = username.trim() !== ''
+        this.validateResult.password = password !== ''
+        this.validateResult.password2 = password2 !== ''
         return -2
       }
     },
     async handleSignup() {
       console.log(this.FormData)
       const result = this.validate(this.FormData.username, this.FormData.password, this.FormData.password2)
-      if (result === -2) { console.log('请补充您的注册信息') }
-      if (result === -1) { console.log('两次输入的密码不一致') }
+      if (result === -2) {
+        this.localValidate = false
+        this.validateInfo = '请补全您的注册信息'
+      }
+      if (result === -1) {
+        this.localValidate = false
+        this.validateInfo = '两次输入的密码不一致'
+      }
       if (result === 0) {
+        this.localValidate = true
         const mdPassword = CryptoJS.MD5(this.FormData.password).toString()
         const res = await this.$axios.post('/api/signup', { username: this.FormData.username, password: mdPassword })
         if (res.data.code === -1) {
-          console.log('用户名已被注册')
+          this.apiValidate = false
+          this.validateInfo = '用户名已被注册'
         } else if (res.data.code === 0) {
           console.log('注册成功')
           this.$router.push('/login')
         } else {
-          console.log('注册失败')
+          this.apiValidate = false
+          this.validateInfo = '注册失败'
         }
       }
     }
@@ -297,6 +308,25 @@ export default {
       p:last-child{
         font-size: 14px;
       }
+    }
+  }
+}
+.login-inform-container{ // TODO: 使用了与登录页中重复的样式，待抽离
+  justify-content: center;
+  margin-top: 30px;
+  .login-fail-inform{
+    flex: 0 0 350px;
+    text-align: center;
+    span{
+      display: inline-block;
+      width: 100%;
+      height: 40px;
+      line-height: 40px;
+      border: 1px solid #e4a4a1;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #cf443a;
+      background: #f5eaea;
     }
   }
 }
